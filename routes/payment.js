@@ -7,6 +7,9 @@ const API_BASE_URL = process.env.API_BASE_URL;
 //  결제 내역 조회
 router.get('/', async (req, res) => {
     const response = await api.get(`${API_BASE_URL}/api/payment/v1/payments`, req.query);
+    if (response.status !== 200) {
+        return res.status(response.status).json(response.data);
+    }
     const returnData = {
         "last_page": response.data.totalPages,
         "data": response.data.paymentList.map((payment, index) => ({
@@ -21,6 +24,9 @@ router.get('/', async (req, res) => {
 router.get('/:paymentNo/paymentLogs', async (req, res) => {
     const {paymentNo} = req.params;
     const response = await api.get(`${API_BASE_URL}/api/payment/v1/payments/${paymentNo}/paymentLogs`);
+    if (response.status !== 200) {
+        return res.status(response.status).json(response.data);
+    }
     const returnData = {
         "last_page": response.data.totalPages,
         "data": response.data.paymentLogList.map((paymentLog, index) => ({
